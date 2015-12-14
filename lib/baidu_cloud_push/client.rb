@@ -15,8 +15,7 @@ module BaiduCloudPush
     REQUEST_METHOD = :post
     DEFAULT_OPTIONS = {
       use_ssl: false,
-      api_version: '3.0',
-      deploy_status: nil
+      api_version: '3.0'
     }
     API_HOST = "api.tuisong.baidu.com/rest/#{DEFAULT_OPTIONS[:api_version]}"
     CONF = YAML.load_file("#{Rails.root}/config/baidu.yml")[Rails.env]
