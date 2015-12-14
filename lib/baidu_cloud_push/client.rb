@@ -26,8 +26,8 @@ module BaiduCloudPush
     attr_reader :api_key, :secret_key, :resource, :api_uri, :request_method, :options 
     attr_accessor :resource
 
-    def initialize(api_key: '', secret_key: '', options: {})
-      @api_key, @secret_key = api_key.strip, secret_key.strip
+    def initialize(api_key: '', secret_key: '', deploy_status: 2, options: {})
+      @api_key, @secret_key, @deploy_status = api_key.strip, secret_key.strip, deploy_status
       @options = DEFAULT_OPTIONS.merge options
 
       @request = Request.new(self)
@@ -37,7 +37,7 @@ module BaiduCloudPush
     # Basic API
     #
     def self.push_single channel_id, message, msg_type = 1
-      params = {msg_type: msg_type, msg: message.to_json, channel_id: channel_id, deploy_status: @options[:deploy_status]}
+      params = {msg_type: msg_type, msg: message.to_json, channel_id: channel_id, deploy_status: @deploy_status}
       resource = RESOURCE[:push_single]
       api_uri = "http://#{API_HOST}/#{resource}"
 
@@ -54,7 +54,7 @@ module BaiduCloudPush
 
     def push_all message: '', msg_type: 1
       set_resource RESOURCE[:push_all]
-      params = {msg_type: msg_type, msg: message.to_json, deploy_status: @options[:deploy_status]} #, timestamp: Time.now.to_i, apikey: @api_key}
+      params = {msg_type: msg_type, msg: message.to_json, deploy_status: @deploy_status} #, timestamp: Time.now.to_i, apikey: @api_key}
 
       @api_uri = set_api_uri
       @request.fetch params
@@ -62,21 +62,21 @@ module BaiduCloudPush
 
     def push_single message: '', channel_id: '', msg_type: 1
       set_resource RESOURCE[:push_single]
-      params = {msg_type: msg_type, msg: message.to_json, channel_id: channel_id, deploy_status: @options[:deploy_status]} #, timestamp: Time.now.to_i}
+      params = {msg_type: msg_type, msg: message.to_json, channel_id: channel_id, deploy_status: @deploy_status} #, timestamp: Time.now.to_i}
       @api_uri = set_api_uri
       @request.fetch params
     end
 
     def push_batch message: '', channel_ids: [], msg_type: 1
       set_resource RESOURCE[:push_batch]
-      params = {msg_type: msg_type, msg: message.to_json, channel_ids: channel_ids.to_json, deploy_status: @options[:deploy_status]}
+      params = {msg_type: msg_type, msg: message.to_json, channel_ids: channel_ids.to_json, deploy_status: @deploy_status}
       @api_uri = set_api_uri
       @request.fetch params
     end
 
     def push_tags type: 1, tag: '', message: ''
       set_resource RESOURCE[:push_tags]
-      params = {type: type, msg: message.to_json, tag: tag, deploy_status: @options[:deploy_status]}
+      params = {type: type, msg: message.to_json, tag: tag, deploy_status: @deploy_status}
       @api_uri = set_api_uri
       @request.fetch params
     end
